@@ -1,88 +1,104 @@
-import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 
-const faqs = [
+const FAQ_DATA = [
     {
-        question: "Do you work with startups?",
-        answer: "Yes, I specialize in working with early-stage startups to build their brand foundation from the ground up."
+        question: "Do you offer free consultations?",
+        answer: "Yes, the initial 30-minute discovery call is completely free. We use this time to understand your needs and determine if we're a good fit."
+    },
+    {
+        question: "What do you need from me to get started?",
+        answer: "I request a brief overview of your project goals, any existing brand guidelines, and examples of sites or designs you admire. Once we agree to proceed, we'll have a formal onboarding."
+    },
+    {
+        question: "How does the design process work?",
+        answer: "My process involves 4 stages: Discovery (understanding your goals), Wireframing (structural layout), High-Fidelity Design (visuals & interactions), and Development/Handoff."
     },
     {
         question: "How long does a branding project take?",
-        answer: "A typical full branding project takes 4-6 weeks from initial discovery to final handoff. This timeline ensures we have time for deep research, thoughtful design, and meaningful iterations."
+        answer: "A standard branding project typically takes 3-6 weeks, depending on the scope and the speed of feedback cycles."
     },
     {
-        question: "What is your design process like?",
-        answer: "My process always starts with strategy. We begin with a deep dive into your business goals, target audience, and market positioning before moving into visual exploration."
+        question: "How much do your services cost?",
+        answer: "Pricing is project-based. A custom website design typically starts at $3,500, while complete branding packages start at $5,000. I provide detailed proposals after our initial call."
     },
     {
-        question: "Do you also do web development?",
-        answer: "Yes, I offer end-to-end services. After designing your brand and website, I can develop it using modern frameworks like React, Next.js, or implement it in Framer."
+        question: "Do you offer ongoing support after the project ends?",
+        answer: "Yes, I offer monthly retainer packages for continuing design support, updates, and optimization once the main project has launched."
     }
 ];
 
 export default function FAQs() {
-    const [openIndex, setOpenIndex] = useState<number | null>(0);
+    const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+    const toggleFAQ = (index: number) => {
+        setOpenIndex(openIndex === index ? null : index);
+    };
 
     return (
-        <section id="faqs" className="py-32 px-6 max-w-4xl mx-auto flex flex-col items-center">
-            {/* Section Header */}
-            <div className="w-full flex flex-col items-center text-center mb-24">
-                <h2 className="text-5xl md:text-7xl lg:text-[5rem] font-display tracking-tighter mb-8">FAQs</h2>
-                <p className="text-zinc-400 text-lg md:text-xl font-sans font-light max-w-md mx-auto">
-                    Common questions about my process, pricing, and how we can work together
-                </p>
-            </div>
+        <section id="faqs" className="py-32 px-6 max-w-4xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-16">
 
-            {/* Accordion List */}
-            <div className="w-full flex flex-col gap-4">
-                {faqs.map((faq, i) => {
-                    const isOpen = openIndex === i;
-                    return (
-                        <motion.div
-                            key={i}
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.6, delay: i * 0.1 }}
-                            className={`
-                group rounded-3xl border overflow-hidden transition-all duration-300
-                ${isOpen ? 'bg-surface border-white/20' : 'bg-surface/50 border-white/5 hover:border-white/10 hover:bg-surface'}
-              `}
-                        >
-                            <button
-                                onClick={() => setOpenIndex(isOpen ? null : i)}
-                                className="w-full flex items-center justify-between p-8 md:p-10 text-left focus:outline-none"
+                {/* Left Col - Sticky Heading */}
+                <div className="flex flex-col items-start lg:sticky lg:top-32 h-fit">
+                    <p className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-6">// FAQ //</p>
+                    <h2 className="text-4xl md:text-5xl font-display font-medium tracking-tight mb-6">
+                        Frequently<br />Asked<br />Questions
+                    </h2>
+                    <p className="text-zinc-400 text-sm leading-relaxed max-w-xs">
+                        Everything you need to know about the product and billing.
+                    </p>
+                </div>
+
+                {/* Right Col - Accordion List */}
+                <div className="flex flex-col border-t border-white/10">
+                    {FAQ_DATA.map((faq, index) => {
+                        const isOpen = openIndex === index;
+
+                        return (
+                            <div
+                                key={index}
+                                className="border-b border-white/10"
                             >
-                                <h3 className={`text-xl md:text-2xl font-display transition-colors duration-300 ${isOpen ? 'text-primary' : 'text-white'}`}>
-                                    {faq.question}
-                                </h3>
-                                <div className={`
-                  w-10 h-10 rounded-full border flex items-center justify-center shrink-0 transition-all duration-500
-                  ${isOpen ? 'bg-primary border-primary text-black rotate-45' : 'bg-white/5 border-white/10 text-white group-hover:bg-white group-hover:text-black'}
-                `}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                </div>
-                            </button>
+                                <button
+                                    onClick={() => toggleFAQ(index)}
+                                    className="w-full flex items-center justify-between py-8 text-left group gap-4"
+                                >
+                                    <span className={`text-xl md:text-2xl font-display tracking-tight transition-colors duration-300 ${isOpen ? 'text-white' : 'text-zinc-300 group-hover:text-white'}`}>
+                                        {faq.question}
+                                    </span>
 
-                            <AnimatePresence>
-                                {isOpen && (
+                                    {/* Simple Arrow Indicator */}
                                     <motion.div
-                                        initial={{ height: 0, opacity: 0 }}
-                                        animate={{ height: "auto", opacity: 1 }}
-                                        exit={{ height: 0, opacity: 0 }}
-                                        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                                        animate={{ rotate: isOpen ? 180 : 0 }}
+                                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                        className="text-zinc-500 group-hover:text-white transition-colors flex-shrink-0"
                                     >
-                                        <div className="px-8 md:px-10 pb-10 text-zinc-400 text-lg md:text-xl font-sans font-light leading-relaxed max-w-2xl">
-                                            {faq.answer}
-                                        </div>
+                                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 5V19M12 19L5 12M12 19L19 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                        </svg>
                                     </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </motion.div>
-                    );
-                })}
+                                </button>
+
+                                <AnimatePresence>
+                                    {isOpen && (
+                                        <motion.div
+                                            initial={{ opacity: 0, height: 0 }}
+                                            animate={{ opacity: 1, height: "auto" }}
+                                            exit={{ opacity: 0, height: 0 }}
+                                            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                                            className="overflow-hidden"
+                                        >
+                                            <p className="pb-8 text-zinc-400 leading-relaxed text-sm md:text-base pr-12">
+                                                {faq.answer}
+                                            </p>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </div>
+                        );
+                    })}
+                </div>
             </div>
         </section>
     );

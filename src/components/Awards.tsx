@@ -9,12 +9,12 @@ const awards = [
 export default function Awards() {
   return (
     <section id="awards" className="py-32 px-6 max-w-5xl mx-auto text-center relative flex flex-col items-center">
-      {/* Background Glows */}
+      {/* Background Glows (No Dot Grid) */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[800px] h-[400px] bg-gradient-to-r from-blue-500/10 via-primary/20 to-purple-500/10 blur-[80px] -z-10 pointer-events-none rounded-full"></div>
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[150%] dot-grid opacity-20 -z-10 blur-[1px]"></div>
 
       <div className="w-full flex flex-col items-center mb-24">
-        <h2 className="text-5xl md:text-7xl lg:text-[5rem] font-display tracking-tighter mb-8">Recognitions</h2>
+        <p className="text-xs font-mono text-zinc-500 uppercase tracking-widest mb-6">// AWARDS //</p>
+        <h2 className="text-5xl md:text-7xl lg:text-[5rem] font-display tracking-tight mb-8">Recognitions</h2>
         <p className="text-zinc-400 text-lg md:text-xl font-sans font-light max-w-md mx-auto">
           Honors and highlights from a journey of meaningful design
         </p>

@@ -1,3 +1,4 @@
+import TopNav from "./components/TopNav";
 import Hero from "./components/Hero";
 import FeaturedWorks from "./components/FeaturedWorks";
 import Services from "./components/Services";
@@ -10,7 +11,8 @@ import BottomNav from "./components/BottomNav";
 
 export default function App() {
   return (
-    <div className="min-h-screen bg-background text-white selection:bg-primary/30 pb-24">
+    <div className="min-h-screen bg-black text-white selection:bg-primary/30 pb-24">
+      <TopNav />
       <Hero />
       <FeaturedWorks />
       <Services />

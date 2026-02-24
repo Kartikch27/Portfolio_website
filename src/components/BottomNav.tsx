@@ -1,10 +1,12 @@
-import { motion } from "motion/react";
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "motion/react";
+import { FiX, FiArrowRight } from "react-icons/fi";
 
-const navItems = [
+const NAV_LINKS = [
   { id: "home", label: "Home" },
-  { id: "menu", label: "Menu", action: true },
-  { id: "contact", label: "Contact" }
+  { id: "works", label: "Works" },
+  { id: "services", label: "Services" },
+  { id: "awards", label: "Awards" }
 ];
 
 export default function BottomNav() {
@@ -12,111 +14,144 @@ export default function BottomNav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (isMenuOpen) return;
-
-      let current = activeSection;
-      let minDistance = Infinity;
-
-      ['home', 'contact'].forEach(id => {
-        const element = document.getElementById(id);
-        if (element) {
-          const rect = element.getBoundingClientRect();
-          const elementCenter = rect.top + rect.height / 2;
-          const viewportCenter = window.innerHeight / 2;
-          const distance = Math.abs(elementCenter - viewportCenter);
-
-          if (rect.top <= window.innerHeight && rect.bottom >= 0) {
-            if (distance < minDistance) {
-              minDistance = distance;
-              current = id;
-            }
-          }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleSections = entries.filter(entry => entry.isIntersecting);
+        if (visibleSections.length > 0) {
+          // Top-most visible section gets priority
+          const sorted = visibleSections.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+          setActiveSection(sorted[0].target.id);
         }
-      });
+      },
+      { rootMargin: "-20% 0px -80% 0px" } // Trigger when element hits top 20% of viewport
+    );
 
-      if (current !== activeSection) {
-        setActiveSection(current);
-      }
-    };
+    NAV_LINKS.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
 
-    window.addEventListener("scroll", handleScroll);
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [activeSection, isMenuOpen]);
+    return () => observer.disconnect();
+  }, []);
 
-  const handleNavClick = (item: typeof navItems[0]) => {
-    if (item.action) {
-      setIsMenuOpen(!isMenuOpen);
-      return;
-    }
-
-    setIsMenuOpen(false);
-    setActiveSection(item.id);
-    const element = document.getElementById(item.id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth" });
+  const scrollToSection = (id: string) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+      setIsMenuOpen(false);
     }
   };
 
   return (
     <>
-      {/* Bottom Center Pill Navigation */}
-      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 pointer-events-auto">
-        <motion.nav
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.5 }}
-          className="flex items-center p-1.5 glass-panel rounded-full shadow-2xl"
-        >
-          {navItems.map((item) => {
-            const isActive = activeSection === item.id && !item.action && !isMenuOpen;
-            const isMenuAndOpen = item.action && isMenuOpen;
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50">
+        <nav className="flex items-center gap-6 px-6 py-3 bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 rounded-full shadow-2xl">
 
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item)}
-                className={`flex items-center justify-center min-w-[100px] h-11 rounded-full cursor-pointer transition-all duration-300 ${isActive || isMenuAndOpen ? "bg-white text-black shadow-md" : "text-zinc-400 hover:text-white hover:bg-white/5"
-                  }`}
-              >
-                <span className={`font-mono text-[13px] tracking-widest uppercase transition-colors duration-300 ${isActive || isMenuAndOpen ? "font-semibold" : "font-medium"}`}>
-                  {item.label}
-                </span>
+          {/* Menu Toggle */}
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="text-white/70 hover:text-white transition-colors flex items-center justify-center p-1"
+            aria-label="Open Menu"
+          >
+            <div className="flex gap-1 h-3">
+              <div className="w-[2px] bg-current rounded-full"></div>
+              <div className="w-[2px] bg-current rounded-full"></div>
+              <div className="w-[2px] bg-current rounded-full"></div>
+            </div>
+          </button>
 
-                {/* Visual indicator for Menu toggle */}
-                {item.action && (
-                  <div className={`ml-2 w-1.5 h-1.5 rounded-full transition-colors duration-300 ${isMenuAndOpen ? 'bg-black' : 'bg-primary'}`}></div>
-                )}
-              </button>
-            );
-          })}
-        </motion.nav>
+          {/* Home Link (Current View Context) */}
+          <button
+            onClick={() => scrollToSection("home")}
+            className="text-sm font-medium text-white transition-colors capitalize tracking-wide hidden sm:block"
+          >
+            {activeSection !== 'contact' ? activeSection : 'Contact'}
+          </button>
+
+          {/* Divider */}
+          <div className="h-4 w-[1px] bg-white/20"></div>
+
+          {/* Contact CTA */}
+          <button
+            onClick={() => scrollToSection("contact")}
+            className="flex items-center gap-2 text-sm font-medium text-white/70 hover:text-white transition-colors group tracking-wide"
+          >
+            Contact
+            <FiArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </button>
+
+        </nav>
       </div>
 
-      {/* Floating Action Menu (Fullscreen overlay) */}
-      <motion.div
-        initial={{ opacity: 0, pointerEvents: "none" }}
-        animate={{ opacity: isMenuOpen ? 1 : 0, pointerEvents: isMenuOpen ? "auto" : "none" }}
-        transition={{ duration: 0.4 }}
-        className="fixed inset-0 bg-background/95 backdrop-blur-xl z-40 flex flex-col items-center justify-center px-6"
-      >
-        <div className="flex flex-col gap-8 text-center">
-          {['works', 'services', 'awards', 'journal', 'faqs'].map((section) => (
-            <button
-              key={section}
-              onClick={() => {
-                setIsMenuOpen(false);
-                const element = document.getElementById(section);
-                if (element) element.scrollIntoView({ behavior: "smooth" });
-              }}
-              className="text-4xl md:text-6xl font-display font-medium text-white hover:text-primary transition-colors capitalize tracking-tighter"
-            >
-              {section}
-            </button>
-          ))}
-        </div>
-      </motion.div>
+      {/* Fullscreen Overlay Menu */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-3xl px-6 py-12 flex flex-col justify-between"
+          >
+            <div className="w-full max-w-5xl mx-auto flex justify-between items-center">
+              <span className="text-xl font-display font-medium">Menu</span>
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="p-4 bg-white/5 hover:bg-white/10 rounded-full border border-white/10 transition-colors"
+                aria-label="Close Menu"
+              >
+                <FiX className="w-6 h-6" />
+              </button>
+            </div>
+
+            <div className="flex-1 w-full max-w-5xl mx-auto flex flex-col justify-center gap-8 md:gap-12 mt-12">
+              {NAV_LINKS.map((link, index) => (
+                <motion.button
+                  key={link.id}
+                  initial={{ opacity: 0, y: 40 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                  onClick={() => scrollToSection(link.id)}
+                  className="group flex items-center justify-between text-left"
+                >
+                  <span className={`text-5xl md:text-8xl font-display tracking-tighter transition-colors duration-300 ${activeSection === link.id ? 'text-white' : 'text-zinc-600 group-hover:text-white/80'}`}>
+                    {link.label}
+                  </span>
+                  {activeSection === link.id && (
+                    <motion.div layoutId="menu-active-dot" className="w-3 h-3 md:w-4 md:h-4 bg-primary rounded-full" />
+                  )}
+                </motion.button>
+              ))}
+
+              {/* Contact explicitly in menu */}
+              <motion.button
+                initial={{ opacity: 0, y: 40 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: NAV_LINKS.length * 0.1, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                onClick={() => scrollToSection("contact")}
+                className="group flex items-center justify-between text-left mt-8 pt-8 border-t border-white/10"
+              >
+                <span className={`text-4xl md:text-6xl font-display tracking-tighter transition-colors duration-300 ${activeSection === 'contact' ? 'text-white' : 'text-zinc-600 group-hover:text-white/80'}`}>
+                  Contact
+                </span>
+                {activeSection === 'contact' && (
+                  <motion.div layoutId="menu-active-dot" className="w-3 h-3 md:w-4 md:h-4 bg-primary rounded-full" />
+                )}
+              </motion.button>
+
+            </div>
+
+            <div className="w-full max-w-5xl mx-auto flex justify-between items-end mt-12 text-sm text-zinc-500 uppercase tracking-widest">
+              <div className="flex gap-6">
+                <a href="#" className="hover:text-white transition-colors">Twitter</a>
+                <a href="#" className="hover:text-white transition-colors">LinkedIn</a>
+                <a href="#" className="hover:text-white transition-colors">Dribbble</a>
+              </div>
+              <span className="hidden md:block">Inspired by Monclar</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

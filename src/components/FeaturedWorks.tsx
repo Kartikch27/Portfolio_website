@@ -1,4 +1,5 @@
 import { motion } from "motion/react";
+import { FiArrowUpRight } from "react-icons/fi";
 
 const projects = [
   {
@@ -30,10 +31,10 @@ export default function FeaturedWorks() {
       <div className="w-full flex flex-col items-center mb-40">
         <p className="text-zinc-500 font-mono text-xs uppercase tracking-widest mb-16">Trusted by the biggest brand worldwide</p>
         <div className="flex flex-wrap justify-center gap-12 md:gap-24 opacity-60">
-          <span className="text-xl font-bold font-sans text-white/80 grayscale hover:grayscale-0 transition-all duration-300">Monclar</span>
-          <span className="text-xl font-bold font-sans text-white/80 grayscale hover:grayscale-0 transition-all duration-300">Realis</span>
-          <span className="text-xl font-bold font-sans text-white/80 grayscale hover:grayscale-0 transition-all duration-300">Norden</span>
-          <span className="text-xl font-bold font-sans text-white/80 grayscale hover:grayscale-0 transition-all duration-300">Omnic</span>
+          <span className="text-xl font-bold font-sans text-white/50 hover:text-white transition-colors duration-300">Monclar</span>
+          <span className="text-xl font-bold font-sans text-white/50 hover:text-white transition-colors duration-300">Realis</span>
+          <span className="text-xl font-bold font-sans text-white/50 hover:text-white transition-colors duration-300">Norden</span>
+          <span className="text-xl font-bold font-sans text-white/50 hover:text-white transition-colors duration-300">Omnic</span>
         </div>
       </div>
 
@@ -57,22 +58,26 @@ export default function FeaturedWorks() {
             transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
             className={`group relative flex flex-col gap-6 ${i % 2 !== 0 ? 'md:mt-24' : ''}`}
           >
-            <div className="relative overflow-hidden rounded-[2rem] bg-surface aspect-[4/5] w-full transform transition-transform duration-700 group-hover:-translate-y-2">
+            <div className="relative overflow-hidden rounded-[2rem] bg-surface aspect-[4/5] w-full border border-white/5">
               <img
                 src={project.image}
                 alt={project.title}
                 className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 opacity-80 group-hover:opacity-100"
               />
-              {/* Subtle hover overlay */}
-              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            </div>
 
-            <div className="flex items-center justify-between px-2">
-              <h3 className="text-2xl font-display text-white group-hover:text-primary transition-colors duration-300">{project.title}</h3>
-              <div className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center transform transition-all duration-500 group-hover:bg-primary group-hover:-rotate-45">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+              {/* Gradient overlay for text readability */}
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+              {/* Title (Appears on Hover) */}
+              <div className="absolute bottom-10 left-0 w-full flex justify-center translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                <h3 className="text-2xl font-display text-white tracking-widest uppercase backdrop-blur-md bg-black/30 px-6 py-3 rounded-full border border-white/10">
+                  {project.title}
+                </h3>
+              </div>
+
+              {/* Top-Right Arrow */}
+              <div className="absolute top-8 right-8 text-white/50 group-hover:text-white transition-colors duration-300">
+                <FiArrowUpRight className="w-8 h-8" />
               </div>
             </div>
           </motion.a>
@@ -91,7 +96,7 @@ export default function FeaturedWorks() {
         <p className="text-zinc-400 text-lg md:text-xl max-w-2xl mx-auto mb-12 font-sans font-light">
           Explore my works and discover what I can achieve for you. Let's create something together.
         </p>
-        <a href="#contact" className="group flex items-center gap-3 px-8 py-4 rounded-full glass-panel hover:bg-white/10 transition-all duration-300 shadow-xl">
+        <a href="#contact" className="group flex items-center gap-3 px-8 py-4 rounded-full glass-panel hover:bg-white/10 transition-all duration-300 shadow-xl border border-white/10">
           <div className="w-2 h-2 rounded-full bg-white group-hover:scale-150 transition-transform duration-300"></div>
           <span className="text-sm font-semibold tracking-wider text-white">VIEW WORK</span>
         </a>
