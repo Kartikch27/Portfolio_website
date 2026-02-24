@@ -1,13 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@500;600;700&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=Michroma&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
-  --color-background: #030303;
-  --color-surface: #0a0a0a;
-  --color-surface-light: #141414;
-  --color-border: #222222;
-  --color-primary: #7c3aed;
+  --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Michroma", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --color-background: #0c0d0f;
+  --color-surface: #12151f;
+  --color-surface-light: rgba(18, 21, 31, 0.6);
+  --color-border: rgba(184, 219, 255, 0.05);
+  --color-border-glow: rgba(184, 219, 255, 0.15);
+  --color-primary: #99a7ff;
+}
+
+@utility dot-grid {
+  background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+@utility glass-panel {
+  background: var(--color-surface-light);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border);
 }
 
 body {
@@ -17,17 +33,24 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-display);
 }
 
 ::-webkit-scrollbar {
   width: 8px;
 }
+
 ::-webkit-scrollbar-track {
   background: var(--color-background);
 }
+
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
+  background: var(--color-border-glow);
   border-radius: 4px;
 }
